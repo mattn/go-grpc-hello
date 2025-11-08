@@ -22,7 +22,7 @@ func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloR
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "50051"
 	}
 	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
