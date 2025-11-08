@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 	"net"
+	"os"
 
-	pb "github.com/mattn/go-grpc-hello/pb" // proto生成ディレクトリを適宜変更
+	pb "github.com/mattn/go-grpc-hello/pb"
 
 	"google.golang.org/grpc"
 )
@@ -19,7 +20,11 @@ func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloR
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":50051") // Cloudflare例のポート
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	lis, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
