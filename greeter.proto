@@ -6,6 +6,7 @@ option go_package = "./pb";  // Goの出力パッケージ名
 
 service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc StreamHello (HelloRequest) returns (stream HelloReply) {};
 }
 
 message HelloRequest {

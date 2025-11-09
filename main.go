@@ -20,6 +20,17 @@ func (s *server) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloR
 	return &pb.HelloReply{Message: "Hello, " + req.Name + "!"}, nil
 }
 
+func (s *server) StreamHello(req *pb.HelloRequest, stream pb.Greeter_StreamHelloServer) error {
+	greetings := []string{"Hello", "Hi", "Hey"}
+	for _, greeting := range greetings {
+		reply := &pb.HelloReply{Message: greeting + ", " + req.Name + "!"}
+		if err := stream.Send(reply); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -29,10 +40,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer(
-		grpc.MaxRecvMsgSize(1<<20),
-		grpc.MaxSendMsgSize(1<<20),
-	)
+	s := grpc.NewServer()
 	reflection.Register(s)
 	pb.RegisterGreeterServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
