@@ -7,7 +7,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	pb "github.com/mattn/go-grpc-hello/pb"
@@ -18,10 +17,10 @@ import (
 
 func main() {
 	var st bool
+	var addr string
 	flag.BoolVar(&st, "stream", false, "replys in stream")
+	flag.StringVar(&addr, "addr", "127.0.0.1:50051", "server address")
 	flag.Parse()
-
-	addr := "127.0.0.1:50051"
 
 	caCertPool, err := x509.SystemCertPool()
 	if err != nil {
@@ -45,8 +44,8 @@ func main() {
 	defer cancel()
 
 	arg := "World"
-	if os.Args != nil && len(os.Args) > 1 {
-		arg = os.Args[1]
+	if flag.NArg() > 0 {
+		arg = flag.Arg(0)
 	}
 
 	if st {
