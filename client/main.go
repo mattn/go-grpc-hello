@@ -4,8 +4,10 @@ package main
 import (
 	"context"
 	"crypto/x509"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"time"
 
@@ -56,6 +58,9 @@ func main() {
 		for {
 			r, err := reply.Recv()
 			if err != nil {
+				if errors.Is(err, io.EOF) {
+					break
+				}
 				log.Fatalf("could not greet: %v", err)
 			}
 			fmt.Printf("Greeting: %q\n", r.GetMessage())
